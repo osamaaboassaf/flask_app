@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Prediction</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.5);
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00ffdd;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        #upload-button {
+            cursor: pointer;
+            background-color: #00ffdd;
+            color: #0f2027;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            box-shadow: 0px 10px 20px rgba(0, 255, 221, 0.5);
+        }
+
+        #upload-button:hover {
+            background-color: #00ccaa;
+            box-shadow: 0px 15px 25px rgba(0, 255, 221, 0.8);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #ffffffb3;
+        }
+
+        .img_up {
+            max-width: 300px;
+            display: none;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-inline: auto;
+        }
+
+        .submit-button {
+            background-color: #00ffdd;
+            color: #0f2027;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0px 10px 20px rgba(0, 255, 221, 0.5);
+        }
+
+        .submit-button:hover {
+            background-color: #00ccaa;
+            box-shadow: 0px 15px 25px rgba(0, 255, 221, 0.8);
+        }
+
+        .img_af {
+            max-width: 300px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        h2.prediction {
+            font-size: 1.8rem;
+            color: #00ffdd;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Upload an Image for AI Prediction</h1>
+
+        <form method="POST" action="/predict" enctype="multipart/form-data">
+            <input type="file" name="file" id="file-input" accept="image/*" required style="display: none;" />
+            <label for="file-input" id="upload-button">Upload Image</label>
+
+            <h2>Image Preview:</h2>
+            <img id="display-image" class="img_up" src="" alt="Image Preview" />
+
+            <img id="img_af" class="img_af" src="{{ image_url }}">
+            <br>
+            <input type="submit" class="submit-button" value="Predict">
+        </form>
+
+        {% if prediction is not none %}
+        <h2 class="prediction">Prediction: {{ prediction }}</h2>
+        {% endif %}
+    </div>
+
+    <script>
+        function handleImageUpload() {
+            const fileInput = document.getElementById('file-input');
+            const displayImage = document.getElementById('display-image');
+            const img_af = document.getElementById('img_af');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    displayImage.src = e.target.result;
+                    displayImage.style.display = 'block';
+                    img_af.style.display = 'none';
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                displayImage.style.display = 'none';
+            }
+        }
+
+        document.getElementById('file-input').addEventListener('change', handleImageUpload);
+    </script>
+</body>
+
+</html>
