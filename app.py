@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 
 # Load the trained model
-model = load_model('my_model.h5')  # Path to your saved model
+model = load_model('my_model.h5')  
 
 
 # Preprocess the image to the format your model expects
